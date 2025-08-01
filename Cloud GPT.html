@@ -1,0 +1,61 @@
+<!DOCTYPE html> <html lang=”en”> 
+<head> 
+ <meta charset=”UTF-8”> 
+ <meta name=”viewport” content=”width=device-width, initial-scale=1.0”> 
+ <title>Cloud GPT Application</title> 
+</head> 
+<body> 
+ <h1>Cloud GPT Application</h1> 
+ <form id=”chat-form”> 
+ <input type=”text” id=”user-input” placeholder=”Type your message here…” required> 
+ <button type=”submit”>Send</button> 
+ </form> 
+ <div id=”response”></div> <script> 
+ Document.getElementById(‘chat-form’).addEventListener(‘submit’, function(event) { 
+ Event.preventDefault(); 
+ Const userInput = document.getElementById(‘user-input’).value; 
+ Fetch(‘/chat’, { 
+ Method: ‘POST’, 
+ Headers: { 
+ ‘Content-Type’: ‘application/json’, 
+ }, 
+ Body: JSON.stringify({ message: userInput }), 
+ }) 
+ .then(response => response.json()) 
+ .then(data => { 
+ Document.getElementById(‘response’).innerText = data.response || data.error; 
+ }) 
+ .catch(error => { 
+ Console.error(‘Error:’, error); 
+ }); 
+ }); 
+</script>
+</body> 
+</html> 
+‘’’ Route for the home page
+@app.route(‘/’)
+Def home():
+Return render_template_string(HTML_TEMPLATE)
+Route for handling chat requests
+@app.route(‘/chat’, methods=[‘POST’])
+Def chat():
+User_input = request.json.get(‘message’)
+If not user_input: 
+ Return jsonify({“error”: “No message provided”}), 400 
+ 
+Try: 
+ # Call OpenAI’s GPT-3 API 
+ Response = openai.Completion.create( 
+ Engine=”text-davinci-003”, # You can use other engines like “gpt-3.5-turbo” 
+ Prompt=user_input, 
+ Max_tokens=150 
+ ) 
+ Return jsonify({“response”: response.choices[0].text.strip()}) 
+Except Exception as e: 
+ Return jsonify({“error”: str€}), 500
+Run the Flask app
+If name == ‘main’:
+App.run(debug=True)
+Data set {“prompt”: “What is the capital of France?”, “completion”: “The capital of France is 
+Paris.”}
+{“prompt”: “Who wrote ‘1984’?”, “completion”: “George Orwell wrote ‘1984’.”}
